@@ -77,7 +77,7 @@ class Answer extends Equatable {
   Map<String, dynamic> toJson() {
     return {
       'type': type,
-      'option': option?.map((e) => e.toJson()).toList(),
+      'options': option?.map((e) => e.toJson()).toList(),
       'short': short,
       'trueFalse': trueFalse,
       'explanation': explanation?.map((e) => e.toJson()).toList(),

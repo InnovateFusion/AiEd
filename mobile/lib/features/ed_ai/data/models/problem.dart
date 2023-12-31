@@ -97,26 +97,27 @@ class ProblemModel extends Problem {
     };
   }
 
-  ProblemModel.fromDbJson(Map<String, dynamic> json)
-      : this(
-          id: json['id'],
-          source: json['source'],
-          target: json['target'],
-          courses: json['courses'],
-          question: (jsonDecode(json['question']) as List)
-              .map((e) => ContentModel.fromJson(e))
-              .toList(),
-          answer: AnswerModel.fromJson(jsonDecode(json['answer'])),
-          essayId: json['essayId'],
-          difficulty: json['difficulty'],
-          topic: json['topic'],
-          unit: json['unit'],
-          grade: json['grade'],
-          correctPoint: json['correctPoint'],
-          wrongPoint: json['wrongPoint'],
-          value: json['value'],
-          year: json['year'],
-          createdAt: DateTime.parse(json['createdAt']),
-          updatedAt: DateTime.parse(json['updatedAt']),
-        );
+  factory ProblemModel.fromDbJson(Map<String, dynamic> json) {
+    return ProblemModel(
+      id: json['id'],
+      source: json['source'],
+      target: json['target'],
+      courses: json['courses'],
+      question: (jsonDecode(json['question']) as List)
+          .map((e) => ContentModel.fromJson(e))
+          .toList(),
+      answer: AnswerModel.fromJson(jsonDecode(json['answer'])),
+      essayId: json['essayId'],
+      difficulty: json['difficulty'],
+      topic: json['topic'],
+      unit: json['unit'],
+      grade: json['grade'],
+      correctPoint: json['correctPoint'],
+      wrongPoint: json['wrongPoint'],
+      value: json['value'],
+      year: json['year'],
+      createdAt: DateTime.parse(json['createdAt']),
+      updatedAt: DateTime.parse(json['updatedAt']),
+    );
+  }
 }

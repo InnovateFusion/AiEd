@@ -39,7 +39,7 @@ class AnswerModel extends Answer {
   factory AnswerModel.fromJson(Map<String, dynamic> json) {
     return AnswerModel(
       type: json['type'],
-      option: (json['option'] as List?)
+      option: (json['options'] as List?)
           ?.map((e) => OptionModel.fromJson(e as Map<String, dynamic>))
           .toList(),
       short: json['short'],
