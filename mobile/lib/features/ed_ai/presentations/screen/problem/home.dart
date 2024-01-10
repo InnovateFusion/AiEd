@@ -6,7 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/features/ed_ai/presentations/bloc/scroll/scroll_bloc.dart';
-import 'package:mobile/features/ed_ai/presentations/screen/problem/question.dart';
+import 'package:mobile/features/ed_ai/presentations/screen/problem/start.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 import '../../bloc/problem/problem_bloc.dart';
@@ -127,6 +127,28 @@ class _ProblemHomeState extends State<ProblemHome> {
           : Brightness.dark,
     ));
 
+    void takeQuiz(BuildContext context) {
+      context.read<ProblemBloc>().add(
+            GetProblems(
+                source: selectedFilter['Source']?.toList(),
+                difficulty: selectedFilter['Difficulty']?.toList(),
+                grade: selectedFilter['Grade']?.toList(),
+                courses: selectedFilter['Course']?.toList(),
+                year: selectedFilter['Year']
+                    ?.toList()
+                    .map((e) => int.parse(e))
+                    .toList()),
+          );
+
+      PersistentNavBarNavigator.pushNewScreenWithRouteSettings(
+        context,
+        settings: const RouteSettings(name: '/contest/contest-info'),
+        screen: const QuizStarter(),
+        withNavBar: true,
+        pageTransitionAnimation: PageTransitionAnimation.cupertino,
+      );
+    }
+
     return Scaffold(
       backgroundColor: AdaptiveTheme.of(context).mode.isDark
           ? const Color.fromRGBO(28, 27, 32, 1)
@@ -146,59 +168,69 @@ class _ProblemHomeState extends State<ProblemHome> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                alignment: Alignment.topCenter,
-                                height: 50,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 20, vertical: 0),
-                                width: MediaQuery.of(context).size.width * 0.8,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              alignment: Alignment.topCenter,
+                              height: 50,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 0),
+                              width: MediaQuery.of(context).size.width * 0.8,
+                              decoration: BoxDecoration(
+                                color: AdaptiveTheme.of(context).mode.isDark
+                                    ? Colors.white.withOpacity(0.05)
+                                    : Colors.white,
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  hintText: 'Search for a question set',
+                                  hintStyle: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400,
+                                    color: AdaptiveTheme.of(context).mode.isDark
+                                        ? Colors.white.withOpacity(0.5)
+                                        : Colors.black.withOpacity(0.5),
+                                  ),
+                                  border: InputBorder.none,
+                                  alignLabelWithHint: true,
+                                  contentPadding:
+                                      const EdgeInsets.only(bottom: 4),
+                                ),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                PersistentNavBarNavigator
+                                    .pushNewScreenWithRouteSettings(
+                                  context,
+                                  settings: const RouteSettings(
+                                      name: '/contest/contest-info'),
+                                  screen: const QuizStarter(),
+                                  withNavBar: true,
+                                  pageTransitionAnimation:
+                                      PageTransitionAnimation.cupertino,
+                                );
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(10),
                                 decoration: BoxDecoration(
                                   color: AdaptiveTheme.of(context).mode.isDark
                                       ? Colors.white.withOpacity(0.05)
-                                      : Colors.white,
-                                  borderRadius: BorderRadius.circular(15),
+                                      : const Color.fromARGB(255, 0, 69, 104),
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
-                                child: TextField(
-                                  decoration: InputDecoration(
-                                    hintText: 'Search for a question set',
-                                    hintStyle: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w400,
-                                      color:
-                                          AdaptiveTheme.of(context).mode.isDark
-                                              ? Colors.white.withOpacity(0.5)
-                                              : Colors.black.withOpacity(0.5),
-                                    ),
-                                    border: InputBorder.none,
-                                    alignLabelWithHint: true,
-                                    contentPadding:
-                                        const EdgeInsets.only(bottom: 4),
-                                  ),
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {},
-                                child: Container(
-                                  padding: const EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
+                                child: Icon(Icons.search,
+                                    size: 30,
                                     color: AdaptiveTheme.of(context).mode.isDark
-                                        ? Colors.white.withOpacity(0.05)
-                                        : const Color.fromARGB(255, 0, 69, 104),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Icon(Icons.search,
-                                      size: 30,
-                                      color:
-                                          AdaptiveTheme.of(context).mode.isDark
-                                              ? Colors.white.withOpacity(0.5)
-                                              : Colors.white),
-                                ),
+                                        ? Colors.white.withOpacity(0.5)
+                                        : Colors.white),
                               ),
-                            ]),
+                            ),
+                          ],
+                        ),
                         const SizedBox(height: 16),
                         Container(
                           padding: const EdgeInsets.all(10),
@@ -430,17 +462,7 @@ class _ProblemHomeState extends State<ProblemHome> {
                                   ),
                                   GestureDetector(
                                     onTap: () {
-                                      PersistentNavBarNavigator
-                                          .pushNewScreenWithRouteSettings(
-                                        context,
-                                        settings: const RouteSettings(
-                                            name: '/contest/contest-info'),
-                                        screen:
-                                            Question(questions: state.problems),
-                                        withNavBar: false,
-                                        pageTransitionAnimation:
-                                            PageTransitionAnimation.cupertino,
-                                      );
+                                      takeQuiz(context);
                                     },
                                     child: Container(
                                       padding: const EdgeInsets.all(10),

@@ -6,7 +6,7 @@ class SubmissionModel extends Submission {
     required String userId,
     required int point,
     required bool isCorrect,
-    required String submissionOn,
+    required SubmissionOn submissionOn,
     required String answer,
     required DateTime attemptedAt,
     String? contestId,

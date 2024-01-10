@@ -1,11 +1,9 @@
-import 'dart:async';
-
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../bloc/scroll/scroll_bloc.dart';
+import 'package:mobile/features/ed_ai/domains/entities/problem.dart';
+import 'package:mobile/features/ed_ai/presentations/bloc/quiz/quiz_bloc.dart';
+import 'package:mobile/features/ed_ai/presentations/screen/problem/textTimer.dart';
 
 class QuestionSet extends StatefulWidget {
   const QuestionSet({Key? key}) : super(key: key);
@@ -17,36 +15,19 @@ class QuestionSet extends StatefulWidget {
 }
 
 class _QuestionSetState extends State<QuestionSet> {
-  final ScrollController _scrollController = ScrollController();
-  Timer? _scrollEndTimer;
-
-  void _scrollListener() {
-    final ScrollBloc scrollBloc = BlocProvider.of<ScrollBloc>(context);
-
-    if (_scrollEndTimer != null && _scrollEndTimer!.isActive) {
-      _scrollEndTimer!.cancel();
-    }
-
-    if (_scrollController.position.userScrollDirection ==
-        ScrollDirection.reverse) {
-      scrollBloc.add(ToggleVisibilityEvent(isVisible: true));
-    } else if (_scrollController.position.userScrollDirection ==
-        ScrollDirection.forward) {
-      scrollBloc.add(ToggleVisibilityEvent(isVisible: false));
-    }
-  }
+  late final List<Problem> questions;
 
   @override
   void initState() {
     super.initState();
-
-    _scrollController.addListener(_scrollListener);
+    context.read<QuizBloc>().stream.listen((event) {
+      questions = event.problems.values.toList();
+    });
   }
 
   @override
   void dispose() {
     super.dispose();
-    _scrollController.dispose();
   }
 
   @override
@@ -72,8 +53,6 @@ class _QuestionSetState extends State<QuestionSet> {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              BlocProvider.of<ScrollBloc>(context)
-                                  .add(ToggleVisibilityEvent(isVisible: false));
                               Navigator.pop(context);
                             },
                             child: const Icon(
@@ -138,18 +117,18 @@ class _QuestionSetState extends State<QuestionSet> {
                   const SizedBox(
                     height: 16,
                   ),
-                  const Row(
+                  Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Padding(
-                        padding: EdgeInsets.only(left: 4),
+                        padding: const EdgeInsets.only(left: 4),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              'Solve 34/100',
-                              style: TextStyle(
+                              'Solve 2/${questions.length}',
+                              style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w400,
                                 color: Colors.white,
@@ -158,7 +137,7 @@ class _QuestionSetState extends State<QuestionSet> {
                           ],
                         ),
                       ),
-                      Row(
+                      const Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Icon(
@@ -169,14 +148,7 @@ class _QuestionSetState extends State<QuestionSet> {
                           SizedBox(
                             width: 8,
                           ),
-                          Text(
-                            '00:20:01',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.white,
-                            ),
-                          ),
+                          TextTimer(),
                         ],
                       ),
                     ],
@@ -202,8 +174,7 @@ class _QuestionSetState extends State<QuestionSet> {
                   ),
                   clipBehavior: Clip.hardEdge,
                   child: ListView.builder(
-                    controller: _scrollController,
-                    itemCount: 20,
+                    itemCount: questions.length,
                     itemBuilder: (context, index) {
                       return Card(
                         elevation: 0.2,

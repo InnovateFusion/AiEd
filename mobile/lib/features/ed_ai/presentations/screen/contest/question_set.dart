@@ -72,8 +72,6 @@ class _QuestionSetState extends State<QuestionSet> {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              BlocProvider.of<ScrollBloc>(context)
-                                  .add(ToggleVisibilityEvent(isVisible: false));
                               Navigator.pop(context);
                             },
                             child: const Icon(

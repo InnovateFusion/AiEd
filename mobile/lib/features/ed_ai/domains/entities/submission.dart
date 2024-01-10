@@ -1,11 +1,16 @@
 import 'package:equatable/equatable.dart';
 
+enum SubmissionOn {
+  quiz,
+  contest,
+}
+
 class Submission extends Equatable {
   final String problemId;
   final String userId;
   final int point;
   final bool isCorrect;
-  final String submissionOn;
+  final SubmissionOn submissionOn;
   final String answer;
   final DateTime attemptedAt;
   final String? contestId;
@@ -44,7 +49,7 @@ class Submission extends Equatable {
     String? userId,
     int? point,
     bool? isCorrect,
-    String? submissionOn,
+    SubmissionOn? submissionOn,
     String? answer,
     DateTime? attemptedAt,
     String? contestId,

@@ -2,7 +2,6 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:mobile/features/ed_ai/presentations/bloc/scroll/scroll_bloc.dart';
 import 'package:mobile/features/ed_ai/presentations/screen/contest/question_set.dart';
 import 'package:mobile/features/ed_ai/presentations/screen/contest/standing.dart';

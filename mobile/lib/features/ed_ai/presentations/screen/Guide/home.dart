@@ -13,7 +13,6 @@ class _GuideHomeState extends State<GuideHome> {
   @override
   void initState() {
     super.initState();
-    context.read<ProblemBloc>().add(const GetProblems());
   }
 
   @override
